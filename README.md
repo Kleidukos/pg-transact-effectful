@@ -1,3 +1,3 @@
-# pg-transact-effectful [![CI-badge][CI-badge]][CI-url]
+# pg-transact-effectful
 
 Work in progress
