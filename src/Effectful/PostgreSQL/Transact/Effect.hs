@@ -2,6 +2,7 @@ module Effectful.PostgreSQL.Transact.Effect
   ( DB
   , runDB
   , dbtToEff
+  , getPool
   ) where
 
 import Control.Monad.Reader (runReaderT)
@@ -24,6 +25,11 @@ runDB :: forall (es :: [Effect]) (a :: Type). (IOE :> es)
       -> Eff es a
 runDB pool m = do
   evalStaticRep (DB pool) m
+
+getPool :: (DB :> es) => Eff es (Pool Connection)
+getPool = do
+  DB pool <- getStaticRep
+  pure pool
 
 -- effToDBT :: forall (a :: Type). ()
 --          => Eff '[DB, IOE] a
