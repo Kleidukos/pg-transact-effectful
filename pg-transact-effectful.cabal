@@ -56,21 +56,3 @@ library
     , pg-transact
     , postgresql-simple
     , resource-pool
-
-test-suite pg-transact-effectful-test
-  import:         common-extensions
-  import:         common-ghc-options
-  import:         common-rts-options
-  type:           exitcode-stdio-1.0
-  main-is:        Main.hs
-  other-modules:  Utils
-  hs-source-dirs: test
-  build-depends:
-    , base
-    , effectful-core
-    , hashable
-    , pg-transact-effectful
-    , servant
-    , servant-server
-    , tasty
-    , tasty-hunit

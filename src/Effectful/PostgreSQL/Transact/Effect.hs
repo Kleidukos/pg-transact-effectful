@@ -3,26 +3,29 @@ module Effectful.PostgreSQL.Transact.Effect
   , runDB
   , dbtToEff
   , getPool
-  ) where
+  )
+where
 
 import Control.Monad.Reader (runReaderT)
 import Data.Kind (Type)
-import Database.PostgreSQL.Simple (Connection)
-import Database.PostgreSQL.Transact (DBT(..))
-import Effectful
-import Effectful.Dispatch.Static
 import Data.Pool (Pool)
 import qualified Data.Pool as Pool
+import Database.PostgreSQL.Simple (Connection)
+import Database.PostgreSQL.Transact (DBT (..))
+import Effectful
+import Effectful.Dispatch.Static
 
 data DB :: Effect
 
 type instance DispatchOf DB = Static WithSideEffects
 newtype instance StaticRep DB = DB (Pool Connection)
 
-runDB :: forall (es :: [Effect]) (a :: Type). (IOE :> es)
-      => Pool Connection
-      -> Eff (DB : es) a
-      -> Eff es a
+runDB ::
+  forall (es :: [Effect]) (a :: Type).
+  (IOE :> es) =>
+  Pool Connection ->
+  Eff (DB : es) a ->
+  Eff es a
 runDB pool m = do
   evalStaticRep (DB pool) m
 
@@ -38,9 +41,10 @@ getPool = do
 --   pool <- DBT.getConnection
 --   liftIO . runEff . runDB pool $ computation
 
-dbtToEff :: (DB :> es)
-         => DBT IO a
-         -> Eff es a
+dbtToEff ::
+  (DB :> es) =>
+  DBT IO a ->
+  Eff es a
 dbtToEff (DBT dbtComputation) = do
   DB pool <- getStaticRep
   unsafeEff_ $ Pool.withResource pool $ \conn ->
