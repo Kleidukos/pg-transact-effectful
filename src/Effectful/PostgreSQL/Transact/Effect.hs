@@ -38,10 +38,10 @@ getPool = do
 --   pool <- DBT.getConnection
 --   liftIO . runEff . runDB pool $ computation
 
-dbtToEff :: (DB :> es, IOE :> es)
+dbtToEff :: (DB :> es)
          => DBT IO a
          -> Eff es a
 dbtToEff (DBT dbtComputation) = do
   DB pool <- getStaticRep
-  liftIO $ Pool.withResource pool $ \conn -> 
+  unsafeEff_ $ Pool.withResource pool $ \conn ->
     runReaderT dbtComputation conn
