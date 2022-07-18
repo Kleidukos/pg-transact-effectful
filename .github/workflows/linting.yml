@@ -19,7 +19,7 @@ jobs:
     - name: 'Run HLint'
       uses: rwe/actions-hlint-run@v1
       with:
-        path: '["src/", "test/"]'
+        path: '["src/"]'
         fail-on: warning
 
   styling:
