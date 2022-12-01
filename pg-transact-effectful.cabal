@@ -51,8 +51,9 @@ library
 
   build-depends:
     , base               <4.18.0
+    , deepseq
     , effectful-core     ^>=2.2
     , mtl
     , pg-transact
     , postgresql-simple
-    , resource-pool
+    , resource-pool      ^>=0.3

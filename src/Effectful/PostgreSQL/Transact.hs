@@ -1,5 +1,6 @@
 module Effectful.PostgreSQL.Transact where
 
+import Control.DeepSeq
 import Data.Int (Int64)
 import Data.Kind (Type)
 import Database.PostgreSQL.Simple (FromRow, Query, ToRow)
@@ -9,7 +10,7 @@ import Effectful.PostgreSQL.Transact.Effect
 
 query
   :: forall (es :: [Effect]) (parameters :: Type) (b :: Type)
-   . (DB :> es, ToRow parameters, FromRow b)
+   . (DB :> es, ToRow parameters, FromRow b, NFData b)
   => Query
   -> parameters
   -> Eff es [b]
@@ -17,14 +18,14 @@ query q parameters = dbtToEff $ DBT.query q parameters
 
 query_
   :: forall (es :: [Effect]) (b :: Type)
-   . (DB :> es, FromRow b)
+   . (DB :> es, FromRow b, NFData b)
   => Query
   -> Eff es [b]
 query_ q = dbtToEff $ DBT.query_ q
 
 queryOne
   :: forall (es :: [Effect]) (parameters :: Type) (b :: Type)
-   . (DB :> es, ToRow parameters, FromRow b)
+   . (DB :> es, ToRow parameters, FromRow b, NFData b)
   => Query
   -> parameters
   -> Eff es (Maybe b)
@@ -32,7 +33,7 @@ queryOne q parameters = dbtToEff $ DBT.queryOne q parameters
 
 queryOne_
   :: forall (es :: [Effect]) (b :: Type)
-   . (DB :> es, FromRow b)
+   . (DB :> es, FromRow b, NFData b)
   => Query
   -> Eff es (Maybe b)
 queryOne_ q = dbtToEff $ DBT.queryOne_ q

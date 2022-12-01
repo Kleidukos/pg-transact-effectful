@@ -6,6 +6,8 @@ module Effectful.PostgreSQL.Transact.Effect
   )
 where
 
+import Control.DeepSeq (NFData, force)
+import Control.Exception
 import Control.Monad.Reader (runReaderT)
 import Data.Kind (Type)
 import Data.Pool (Pool)
@@ -42,10 +44,11 @@ getPool = do
 --   liftIO . runEff . runDB pool $ computation
 
 dbtToEff
-  :: (DB :> es)
+  :: (DB :> es, NFData a)
   => DBT IO a
   -> Eff es a
 dbtToEff (DBT dbtComputation) = do
   DB pool <- getStaticRep
-  unsafeEff_ $ Pool.withResource pool $ \conn ->
+  result <- unsafeEff_ $! Pool.withResource pool $ \conn ->
     runReaderT dbtComputation conn
+  unsafeEff_ (evaluate . force $! result)
