@@ -12,6 +12,9 @@ extra-source-files:
   LICENSE.md
   README.md
 
+tested-with:
+  GHC ==8.10.7 || ==9.0.2 || ==9.2.8 || ==9.4.5 || ==9.6.2
+
 source-repository head
   type:     git
   location: https://github.com/kleidukos/pg-transact-effectful
@@ -50,10 +53,10 @@ library
     Effectful.PostgreSQL.Transact.Effect
 
   build-depends:
-    , base               <4.18.0
+    , base               <4.19.0
     , deepseq
     , effectful-core     ^>=2.2
     , mtl
     , pg-transact
     , postgresql-simple
-    , resource-pool      ^>=0.3
+    , resource-pool      ^>=0.4

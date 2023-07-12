@@ -12,15 +12,12 @@ ghci: repl ## Start a cabal REPL (alias for `make repl`)
 watch: ## Load the main library and reload on file change
 	@ghcid -l
 
-test: build ## Run the test suite
-	cabal test
-
 lint: ## Run the code linter (HLint)
-	@find test src -name "*.hs" | xargs -P $(PROCS) -I {} hlint --refactor-options="-i" --refactor {}
+	@find src -name "*.hs" | xargs -P $(PROCS) -I {} hlint --refactor-options="-i" --refactor {}
 
 style: ## Run the code formatters (stylish-haskell, cabal-fmt, nixfmt)
-	@find test src -name '*.hs' -exec fourmolu -i {} +
 	@cabal-fmt -i *.cabal
+	@find src -name '*.hs' -exec fourmolu -i {} +
 
 tags: ## Generate ctags for the project with `ghc-tags`
 	@ghc-tags -c
