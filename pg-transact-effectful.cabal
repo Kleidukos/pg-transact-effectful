@@ -12,7 +12,8 @@ extra-source-files:
   LICENSE.md
   README.md
 
-tested-with: GHC == 8.10.7 || ==9.0.2 || ==9.2.8 || ==9.4.5 || ==9.6.1
+tested-with:
+  GHC ==8.10.7 || ==9.0.2 || ==9.2.8 || ==9.4.5 || ==9.6.1
 
 source-repository head
   type:     git
