@@ -7,7 +7,7 @@ on:
 
 jobs:
   generateMatrix:
-    name: "Generate matrix from cabal"
+    name: "Generate matrix"
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -17,18 +17,19 @@ jobs:
       - name: Extract the tested GHC versions
         id: set-matrix
         run: |
-          wget https://github.com/Kleidukos/get-tested/releases/download/v0.1.4.0/get-tested-0.1.4.0-linux-amd64 -O get-tested
+          wget -q https://github.com/Kleidukos/get-tested/releases/download/v0.1.4.0/get-tested-0.1.4.0-linux-amd64 -O get-tested
           chmod +x get-tested
-          ./get-tested --ubuntu *.cabal >> $GITHUB_OUTPUT
+          ./get-tested --ubuntu pg-transact-effectful.cabal >> $GITHUB_OUTPUT
 
   tests:
-    name: ${{ matrix.os }} / ghc ${{ matrix.ghc }} — cabal ${{ matrix.cabal }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.ghc }} on ${{ matrix.os }}
+    needs: generateMatrix
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix: ${{ fromJSON(needs.generateMatrix.outputs.matrix) }}
     steps:
-    - uses: actions/checkout@v3
-      if: github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.ref == 'refs/heads/main'
+    - name: Checkout base repo
+      uses: actions/checkout@v3
 
     - name: "Configure ghcup"
       run: |
@@ -38,8 +39,8 @@ jobs:
       id: setup-haskell
       uses: haskell/actions/setup@v2
       with:
-        ghc-version: ${{ matrix.ghc }}
-        cabal-version: ${{ matrix.cabal }}
+        ghc-version: "${{ matrix.ghc }}"
+        cabal-version: "latest"
 
     - name: Configure environment
       run: |
@@ -60,10 +61,3 @@ jobs:
     - name: Build
       run: |
         make build
-        cabal install postgresql-migration
-
-#     - name: Test
-#       run: |
-#         cabal test
-#       env:
-#         PGPASSWORD: "postgres"
