@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               pg-transact-effectful
-version:            0.0.1.0
+version:            0.0.1.1
 homepage:           https://github.com/kleidukos/pg-transact-effectful/
 bug-reports:        https://github.com/kleidukos/pg-transact-effectful/issues
 author:             Hécate Moonlight
@@ -13,7 +13,7 @@ extra-source-files:
   README.md
 
 tested-with:
-  GHC ==8.10.7 || ==9.0.2 || ==9.2.8 || ==9.4.5 || ==9.6.2
+  GHC ==9.2.8 || ==9.4.7 || ==9.6.2 || ==9.8.1
 
 source-repository head
   type:     git
@@ -55,7 +55,7 @@ library
   build-depends:
     , base               <4.19.0
     , deepseq
-    , effectful-core     ^>=2.2
+    , effectful-core     ^>=2.3
     , mtl
     , pg-transact
     , postgresql-simple
