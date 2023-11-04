@@ -53,7 +53,7 @@ library
     Effectful.PostgreSQL.Transact.Effect
 
   build-depends:
-    , base               <4.19.0
+    , base               <4.20.0
     , deepseq
     , effectful-core     ^>=2.3
     , mtl
