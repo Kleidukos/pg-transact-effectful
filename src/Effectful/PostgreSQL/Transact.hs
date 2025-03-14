@@ -6,11 +6,12 @@ import Data.Kind (Type)
 import Database.PostgreSQL.Simple (FromRow, Query, ToRow)
 import qualified Database.PostgreSQL.Transact as DBT
 import Effectful (Eff, Effect, type (:>))
+
 import Effectful.PostgreSQL.Transact.Effect
 
 query
   :: forall (es :: [Effect]) (parameters :: Type) (b :: Type)
-   . (DB :> es, ToRow parameters, FromRow b, NFData b)
+   . (DB :> es, FromRow b, NFData b, ToRow parameters)
   => Query
   -> parameters
   -> Eff es [b]
@@ -25,7 +26,7 @@ query_ q = dbtToEff $ DBT.query_ q
 
 queryOne
   :: forall (es :: [Effect]) (parameters :: Type) (b :: Type)
-   . (DB :> es, ToRow parameters, FromRow b, NFData b)
+   . (DB :> es, FromRow b, NFData b, ToRow parameters)
   => Query
   -> parameters
   -> Eff es (Maybe b)
@@ -40,7 +41,7 @@ queryOne_ q = dbtToEff $ DBT.queryOne_ q
 
 execute
   :: forall (es :: [Effect]) (parameters :: Type)
-   . (ToRow parameters, DB :> es)
+   . (DB :> es, ToRow parameters)
   => Query
   -> parameters
   -> Eff es Int64
@@ -48,14 +49,14 @@ execute q parameters = dbtToEff $ DBT.execute q parameters
 
 execute_
   :: forall (es :: [Effect])
-   . (DB :> es)
+   . DB :> es
   => Query
   -> Eff es Int64
 execute_ q = dbtToEff $ DBT.execute_ q
 
 executeMany
   :: forall (es :: [Effect]) (parameters :: Type)
-   . (ToRow parameters, DB :> es)
+   . (DB :> es, ToRow parameters)
   => Query
   -> [parameters]
   -> Eff es Int64

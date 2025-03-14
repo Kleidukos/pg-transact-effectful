@@ -8,12 +8,11 @@ maintainer:         Hécate Moonlight
 license:            MIT
 build-type:         Simple
 extra-source-files:
-  CHANGELOG.md
   LICENSE.md
   README.md
 
-tested-with:
-  GHC ==9.4.7 || ==9.6.3
+extra-doc-files:    CHANGELOG.md
+tested-with:        GHC ==9.6.6 || ==9.8.4 || ==9.10.1
 
 source-repository head
   type:     git
@@ -36,7 +35,7 @@ common common-extensions
 
 common common-ghc-options
   ghc-options:
-    -Wall -Wcompat -Werror -Widentities -Wincomplete-record-updates
+    -Wall -Wcompat -Widentities -Wincomplete-record-updates
     -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints
     -fhide-source-paths -Wno-unused-do-bind
     -Wno-unticked-promoted-constructors
@@ -53,9 +52,9 @@ library
     Effectful.PostgreSQL.Transact.Effect
 
   build-depends:
-    , base               <4.19.0
+    , base               <4.22.0
     , deepseq
-    , effectful-core     ^>=2.3
+    , effectful-core     >=2.3
     , mtl
     , pg-transact
     , postgresql-simple
