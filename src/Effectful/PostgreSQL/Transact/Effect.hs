@@ -24,14 +24,14 @@ newtype instance StaticRep DB = DB (Pool Connection)
 
 runDB
   :: forall (es :: [Effect]) (a :: Type)
-   . (IOE :> es)
+   . IOE :> es
   => Pool Connection
   -> Eff (DB : es) a
   -> Eff es a
 runDB pool m = do
   evalStaticRep (DB pool) m
 
-getPool :: (DB :> es) => Eff es (Pool Connection)
+getPool :: DB :> es => Eff es (Pool Connection)
 getPool = do
   DB pool <- getStaticRep
   pure pool
