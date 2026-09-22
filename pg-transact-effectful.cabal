@@ -58,4 +58,4 @@ library
     , mtl
     , pg-transact
     , postgresql-simple
-    , resource-pool      ^>=0.4
+    , resource-pool      >=0.4
